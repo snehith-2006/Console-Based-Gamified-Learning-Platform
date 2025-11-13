@@ -15,10 +15,10 @@ public class Student extends Person {
         System.out.println("1. View All Courses (Enroll)");
         System.out.println("2. View My Registered Courses");
         System.out.println("3. View Completed Courses");
-        System.out.println("4. Take a Random Quiz");       // NEW
-        System.out.println("5. Reset Course Progress"); // NEW
-        System.out.println("6. View Profile");           // NEW
-        System.out.println("7. Logout");                 // Re-numbered
+        System.out.println("4. Take a Random Quiz");
+        System.out.println("5. Reset Course Progress");
+        System.out.println("6. View Profile");
+        System.out.println("7. Logout");
         System.out.print("Choose an option: ");
     }
 }

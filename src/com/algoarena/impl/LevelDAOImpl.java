@@ -49,7 +49,6 @@ public class LevelDAOImpl implements ILevelDAO {
     @Override
     public boolean addQuestion(Question question) {
         Connection conn = DBConnector.getConnection();
-        // --- UPDATED SQL ---
         String sql = "INSERT INTO questions (level_id, question_text, option1, option2, option3, option4, correct_option, hint) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -61,7 +60,7 @@ public class LevelDAOImpl implements ILevelDAO {
             pstmt.setString(5, question.getOption3());
             pstmt.setString(6, question.getOption4());
             pstmt.setInt(7, question.getCorrectOption());
-            pstmt.setString(8, question.getHint()); // --- NEW LINE ---
+            pstmt.setString(8, question.getHint());
             
             int rowsAffected = pstmt.executeUpdate();
             return rowsAffected > 0;
@@ -75,7 +74,6 @@ public class LevelDAOImpl implements ILevelDAO {
 
     @Override
     public Level getLevelById(int levelId) {
-        // (This method is unchanged, but included for completeness)
         Connection conn = DBConnector.getConnection();
         String sql = "SELECT * FROM levels WHERE id = ?";
         Level level = null;
@@ -100,7 +98,6 @@ public class LevelDAOImpl implements ILevelDAO {
 
     @Override
     public List<Level> getLevelsByCourse(int courseId) {
-        // (This method is unchanged, but included for completeness)
         List<Level> levels = new ArrayList<>();
         Connection conn = DBConnector.getConnection();
         String sql = "SELECT * FROM levels WHERE course_id = ? ORDER BY level_order ASC";
@@ -126,7 +123,6 @@ public class LevelDAOImpl implements ILevelDAO {
 
     @Override
     public List<Question> getQuestionsByLevel(int levelId) {
-        // (This method is unchanged, but updated to include hint)
         List<Question> questions = new ArrayList<>();
         Connection conn = DBConnector.getConnection();
         String sql = "SELECT * FROM questions WHERE level_id = ?";
@@ -145,7 +141,7 @@ public class LevelDAOImpl implements ILevelDAO {
                     q.setOption3(rs.getString("option3"));
                     q.setOption4(rs.getString("option4"));
                     q.setCorrectOption(rs.getInt("correct_option"));
-                    q.setHint(rs.getString("hint")); // --- NEW LINE ---
+                    q.setHint(rs.getString("hint"));
                     questions.add(q);
                 }
             }
@@ -156,19 +152,16 @@ public class LevelDAOImpl implements ILevelDAO {
         return questions;
     }
     
-    // --- NEW METHOD IMPLEMENTATION ---
     @Override
     public List<Question> getRandomQuestions(int userId, int limit) {
         List<Question> questions = new ArrayList<>();
         Connection conn = DBConnector.getConnection();
         
-        // This query finds questions from levels the user is enrolled in,
-        // shuffles them randomly, and takes the 'limit'.
         String sql = "SELECT q.* FROM questions q " +
                      "JOIN levels l ON q.level_id = l.id " +
                      "JOIN user_progress up ON l.id = up.level_id " +
                      "WHERE up.user_id = ? " +
-                     "ORDER BY RAND() " + // Note: RAND() is slow on large dbs, but fine here
+                     "ORDER BY RAND() " +
                      "LIMIT ?";
         
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {

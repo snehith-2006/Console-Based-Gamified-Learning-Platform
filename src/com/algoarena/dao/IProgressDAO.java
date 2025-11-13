@@ -18,12 +18,5 @@ public interface IProgressDAO {
     
     List<Course> getRegisteredCourses(int userId);
     
-    // --- NEW METHOD ---
-    /**
-     * Deletes all progress for a user in a specific course.
-     * @param userId The user's ID.
-     * @param courseId The course's ID.
-     * @return true if successful, false otherwise.
-     */
     boolean resetProgress(int userId, int courseId);
 }

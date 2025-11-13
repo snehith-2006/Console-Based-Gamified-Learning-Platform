@@ -1,6 +1,5 @@
 package com.algoarena.models;
 
-// Matches the 'levels' table
 public class Level {
 
     private int id;
@@ -9,14 +8,7 @@ public class Level {
     private String learningText;
     private int levelOrder;
 
-    // --- THIS IS THE NEW PART ---
-    // 'transient' means it's temporary and doesn't exist in the database table.
-    // It's only used to hold data for the progress view.
     private transient boolean completed;
-    // ----------------------------
-
-    
-    // --- Getters and Setters ---
 
     public int getId() {
         return id;
@@ -58,7 +50,6 @@ public class Level {
         this.levelOrder = levelOrder;
     }
 
-    // --- GETTER/SETTER FOR THE NEW FIELD ---
     public boolean isCompleted() {
         return completed;
     }
@@ -66,6 +57,4 @@ public class Level {
     public void setCompleted(boolean completed) {
         this.completed = completed;
     }
-    // -------------------------------------
-    
 }

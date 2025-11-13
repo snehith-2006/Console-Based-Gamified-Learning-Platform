@@ -11,7 +11,6 @@ import com.algoarena.util.DBConnector;
 
 public class MainApp {
 
-    // DAOs
     private static IUserDAO userDAO = new UserDAOImpl();
     private static ICourseDAO courseDAO = new CourseDAOImpl();
     private static ILevelDAO levelDAO = new LevelDAOImpl();
@@ -110,8 +109,6 @@ public class MainApp {
             }
         }
     }
-
-    // --- STUDENT MENU HANDLERS (ALL NEW) ---
 
     private static boolean handleStudentMenu(Student student, int choice) {
         switch (choice) {
@@ -234,7 +231,6 @@ public class MainApp {
             return;
         }
         
-        // Shuffle the list just in case the SQL RAND() wasn't perfect
         Collections.shuffle(questions); 
         
         int score = 0;
@@ -369,7 +365,6 @@ public class MainApp {
                 System.out.println("Correct!");
             } else {
                 System.out.println("Incorrect. The correct answer was " + q.getCorrectOption());
-                // --- NEW: SHOW HINT ---
                 if (q.getHint() != null && !q.getHint().isEmpty()) {
                     System.out.println("Hint: " + q.getHint());
                 }
@@ -406,8 +401,6 @@ public class MainApp {
         }
     }
 
-
-    // --- CREATOR MENU HANDLERS (ALL NEW) ---
 
     private static boolean handleCreatorMenu(Creator creator, int choice) {
         switch (choice) {
@@ -502,7 +495,6 @@ public class MainApp {
         Level selectedLevel = selectCourseLevel(selectedCourse);
         if (selectedLevel == null) return;
 
-        // 3. Get question details
         System.out.print("Enter the question: ");
         String qText = scanner.nextLine();
         System.out.print("Enter option 1: ");
@@ -516,7 +508,6 @@ public class MainApp {
         System.out.print("Enter the correct answer number (1-4): ");
         int correct = getIntInput();
         
-        // --- NEW: Ask for optional hint ---
         System.out.print("Enter an optional hint (or press Enter to skip): ");
         String hint = scanner.nextLine();
 
@@ -528,7 +519,7 @@ public class MainApp {
         newQuestion.setOption3(o3);
         newQuestion.setOption4(o4);
         newQuestion.setCorrectOption(correct);
-        newQuestion.setHint(hint); // Set the hint
+        newQuestion.setHint(hint);
 
         if (levelDAO.addQuestion(newQuestion)) {
             System.out.println("Question added successfully!");
@@ -572,9 +563,6 @@ public class MainApp {
     }
 
 
-    // --- HELPER UTILITIES ---
-    
-    // (A new helper to reduce repeated code)
     private static Course selectCreatorCourse(Creator creator) {
         List<Course> myCourses = courseDAO.getCoursesByCreator(creator.getId());
         if (myCourses.isEmpty()) {
@@ -591,10 +579,9 @@ public class MainApp {
         if (choice > 0 && choice <= myCourses.size()) {
             return myCourses.get(choice - 1);
         }
-        return null; // Cancelled
+        return null;
     }
     
-    // (A new helper to reduce repeated code)
     private static Level selectCourseLevel(Course course) {
         List<Level> levels = levelDAO.getLevelsByCourse(course.getId());
         if (levels.isEmpty()) {
@@ -611,7 +598,7 @@ public class MainApp {
         if (levelChoice > 0 && levelChoice <= levels.size()) {
             return levels.get(levelChoice - 1);
         }
-        return null; // Cancelled
+        return null;
     }
 
     private static int getIntInput() {

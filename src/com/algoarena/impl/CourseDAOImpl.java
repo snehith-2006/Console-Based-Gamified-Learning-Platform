@@ -14,7 +14,6 @@ public class CourseDAOImpl implements ICourseDAO {
 
     @Override
     public boolean createCourse(Course course) {
-        // (This method is unchanged, but included for completeness)
         Connection conn = DBConnector.getConnection();
         String sql = "INSERT INTO courses (title, description, creator_id) VALUES (?, ?, ?)";
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -32,7 +31,6 @@ public class CourseDAOImpl implements ICourseDAO {
 
     @Override
     public List<Course> getCoursesByCreator(int creatorId) {
-        // (This method is unchanged, but included for completeness)
         List<Course> courses = new ArrayList<>();
         Connection conn = DBConnector.getConnection();
         String sql = "SELECT * FROM courses WHERE creator_id = ?";
@@ -57,7 +55,6 @@ public class CourseDAOImpl implements ICourseDAO {
 
     @Override
     public List<Course> getAllCourses() {
-        // (This method is unchanged, but included for completeness)
         List<Course> courses = new ArrayList<>();
         Connection conn = DBConnector.getConnection();
         String sql = "SELECT * FROM courses";
@@ -79,11 +76,9 @@ public class CourseDAOImpl implements ICourseDAO {
         return courses;
     }
     
-    // --- NEW METHOD IMPLEMENTATION ---
     @Override
     public int getEnrollmentCount(int courseId) {
         Connection conn = DBConnector.getConnection();
-        // This query counts the unique users in user_progress for a given course.
         String sql = "SELECT COUNT(DISTINCT user_id) AS count " +
                      "FROM user_progress up " +
                      "JOIN levels l ON up.level_id = l.id " +
@@ -101,29 +96,22 @@ public class CourseDAOImpl implements ICourseDAO {
             System.err.println("Error getting enrollment count:");
             e.printStackTrace();
         }
-        return 0; // Return 0 if error or no enrollments
+        return 0;
     }
 
-    // --- NEW METHOD IMPLEMENTATION ---
     @Override
     public boolean deleteCourse(int courseId) {
         Connection conn = DBConnector.getConnection();
-        // We must delete in the correct order to avoid Foreign Key errors
         
         String[] deleteQueries = {
-            // 1. Delete all student progress for this course
             "DELETE FROM user_progress WHERE level_id IN (SELECT id FROM levels WHERE course_id = ?)",
-            // 2. Delete all questions for this course
             "DELETE FROM questions WHERE level_id IN (SELECT id FROM levels WHERE course_id = ?)",
-            // 3. Delete all levels for this course
             "DELETE FROM levels WHERE course_id = ?",
-            // 4. Finally, delete the course itself
             "DELETE FROM courses WHERE id = ?"
         };
         
         try {
-            // This is a simple form of transaction
-            conn.setAutoCommit(false); // Start transaction
+            conn.setAutoCommit(false);
             
             for (String sql : deleteQueries) {
                 try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
@@ -132,15 +120,15 @@ public class CourseDAOImpl implements ICourseDAO {
                 }
             }
             
-            conn.commit(); // All deletes were successful
-            conn.setAutoCommit(true); // Go back to normal
+            conn.commit();
+            conn.setAutoCommit(true);
             return true;
             
         } catch (SQLException e) {
             System.err.println("Error deleting course (rolling back):");
             e.printStackTrace();
             try {
-                conn.rollback(); // Undo any changes if one query failed
+                conn.rollback();
             } catch (SQLException se) {
                 System.err.println("Error rolling back:");
                 se.printStackTrace();
@@ -148,7 +136,7 @@ public class CourseDAOImpl implements ICourseDAO {
             return false;
         } finally {
             try {
-                conn.setAutoCommit(true); // Always reset
+                conn.setAutoCommit(true);
             } catch (SQLException e) {
                 e.printStackTrace();
             }

@@ -1,6 +1,5 @@
 package com.algoarena.models;
 
-// This class just holds data. It matches the 'courses' table.
 public class Course {
 
     private int id;
@@ -8,9 +7,6 @@ public class Course {
     private String description;
     private int creatorId;
 
-    // --- Getters and Setters ---
-    // We use these to practice Encapsulation.
-    
     public int getId() {
         return id;
     }

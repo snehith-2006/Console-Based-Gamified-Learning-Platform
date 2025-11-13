@@ -1,6 +1,5 @@
 package com.algoarena.models;
 
-// Matches the 'questions' table
 public class Question {
 
     private int id;
@@ -11,11 +10,7 @@ public class Question {
     private String option3;
     private String option4;
     private int correctOption;
-    
-    // --- NEW FIELD ---
     private String hint;
-
-    // --- Getters and Setters ---
 
     public int getId() {
         return id;
@@ -81,7 +76,6 @@ public class Question {
         this.correctOption = correctOption;
     }
 
-    // --- GETTER/SETTER FOR HINT ---
     public String getHint() {
         return hint;
     }
